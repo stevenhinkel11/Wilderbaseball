@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wilder's Baseball Schedule 2026 – Go Emeralds!</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dk:    #0d2b1a;   /* very dark emerald */
+      --green: #006838;   /* primary emerald   */
+      --mid:   #00a550;   /* bright emerald    */
+      --lime:  #39b54a;   /* jersey lime       */
+      --gold:  #ffd100;   /* gold accent       */
+      --cream: #f4faf6;   /* light bg          */
+      --tan:   #d4ecdb;   /* table borders     */
+      --shadow: 0 4px 18px rgba(0,0,0,.18);
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: #1a1a1a;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(150deg, var(--dk) 0%, var(--green) 70%, #005030 100%);
+      color: #fff;
+      text-align: center;
+      padding: 2rem 1rem 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,.03) 18px,
+        rgba(255,255,255,.03) 36px
+      );
+      pointer-events: none;
+    }
+    .logo-ring {
+      width: 110px; height: 110px;
+      border: 5px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      background: rgba(255,255,255,.07);
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--gold);
+      text-shadow: 1px 2px 6px rgba(0,0,0,.5);
+      font-style: italic;
+      text-transform: uppercase;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      letter-spacing: 1px;
+      text-shadow: 1px 3px 8px rgba(0,0,0,.4);
+    }
+    header h1 em {
+      color: var(--gold);
+      font-style: normal;
+    }
+    header p.subtitle {
+      font-size: 1.05rem;
+      opacity: .85;
+      margin-top: .5rem;
+      letter-spacing: .5px;
+    }
+    header p.go {
+      margin-top: .6rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 1px 2px 6px rgba(0,0,0,.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--dk);
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      padding: .6rem 1rem;
+      flex-wrap: wrap;
+      border-bottom: 3px solid var(--gold);
+    }
+    nav a {
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      padding: .4rem 1.2rem;
+      border-radius: 20px;
+      font-size: .9rem;
+      letter-spacing: .5px;
+      transition: background .2s, color .2s;
+    }
+    nav a:hover, nav a.active {
+      background: var(--gold);
+      color: var(--dk);
+      font-weight: bold;
+    }
+
+    /* ── HERO STRIP ── */
+    .hero-strip {
+      display: flex;
+      height: 300px;
+      overflow: hidden;
+    }
+    .hero-strip .photo {
+      flex: 1;
+      object-fit: cover;
+      filter: brightness(.88);
+      transition: flex .4s ease, filter .3s;
+      min-width: 0;
+    }
+    .hero-strip .photo:hover {
+      flex: 2.8;
+      filter: brightness(1.02);
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--green);
+      border-bottom: 3px solid var(--lime);
+      padding-bottom: .4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── NEXT GAME CARD ── */
+    .next-game-card {
+      background: linear-gradient(135deg, var(--dk), var(--green));
+      color: #fff;
+      border-radius: 14px;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      border: 2px solid var(--gold);
+    }
+    .next-game-card .label {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+    }
+    .next-game-card .game-date { font-size: 2rem; font-weight: 900; }
+    .next-game-card .game-info { font-size: 1.15rem; margin-top: .2rem; }
+    .next-game-card .game-time { font-size: 1rem; opacity: .8; margin-top: .15rem; }
+    .next-game-card .baseball  { font-size: 3.5rem; margin-left: auto; }
+
+    /* ── STATS ── */
+    .stats-strip {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.2rem;
+    }
+    .stat-card {
+      flex: 1 1 130px;
+      background: #fff;
+      border: 2px solid var(--tan);
+      border-top: 4px solid var(--lime);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .stat-card .num { font-size: 2.2rem; font-weight: 900; color: var(--green); }
+    .stat-card .lbl { font-size: .75rem; color: #666; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #fff;
+      border: 2px solid var(--green);
+      color: var(--green);
+      padding: .35rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: .85rem;
+      font-family: Georgia, serif;
+      transition: all .2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--green);
+      color: #fff;
+    }
+
+    /* ── SCHEDULE TABLE ── */
+    .schedule-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .95rem;
+    }
+    thead th {
+      background: var(--green);
+      color: #fff;
+      padding: .7rem 1rem;
+      text-align: left;
+      text-transform: uppercase;
+      font-size: .76rem;
+      letter-spacing: .5px;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--tan);
+      transition: background .15s;
+    }
+    tbody tr:hover { background: #e6f5eb; }
+    tbody td { padding: .65rem 1rem; vertical-align: middle; }
+
+    tr.past     { opacity: .5; }
+    tr.today    { background: #fffbdd !important; font-weight: bold; }
+    tr.hidden   { display: none; }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .65rem;
+      border-radius: 12px;
+      font-size: .76rem;
+      font-weight: bold;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .badge-game     { background: var(--green);  color: #fff; }
+    .badge-practice { background: #5a7d62;        color: #fff; }
+    .badge-today    { background: var(--gold);    color: #333; }
+
+    .home-tag { color: var(--green); font-weight: bold; }
+    .away-tag { color: #b55; font-weight: bold; }
+    .ha       { font-size: .74rem; margin-left: .3rem; }
+
+    /* ── GALLERY ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .gallery-item {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color .2s;
+    }
+    .gallery-item:hover { border-color: var(--gold); }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .35s;
+      display: block;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-item .caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.7));
+      color: #fff;
+      font-size: .8rem;
+      padding: .7rem .8rem .4rem;
+      transform: translateY(100%);
+      transition: transform .25s;
+    }
+    .gallery-item:hover .caption { transform: translateY(0); }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img  {
+      max-width: 90vw; max-height: 88vh;
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(0,0,0,.6);
+      border: 3px solid var(--gold);
+    }
+    #lightbox-close {
+      position: absolute; top: 1.2rem; right: 1.5rem;
+      font-size: 2.5rem; color: #fff; cursor: pointer;
+      line-height: 1; opacity: .8;
+    }
+    #lightbox-close:hover { opacity: 1; color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dk);
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      padding: 1.3rem;
+      font-size: .85rem;
+      margin-top: 3rem;
+      border-top: 3px solid var(--gold);
+    }
+    footer strong { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .hero-strip { height: 180px; }
+      .next-game-card .baseball { display: none; }
+      thead th:nth-child(5), tbody td:nth-child(5) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-ring">Emeralds</div>
+  <h1>Wilder's Baseball <em>2026</em></h1>
+  <p class="subtitle">San Lorenzo Valley Little League &nbsp;·&nbsp; AAA Division</p>
+  <p class="go">⚾ Go Emeralds! ⚾</p>
+</header>
+
+<!-- NAV -->
+<nav>
+  <a href="#schedule" class="active">Schedule</a>
+  <a href="#photos">Photos</a>
+</nav>
+
+<!-- HERO PHOTO STRIP — portraits need face positioned near top -->
+<div class="hero-strip">
+  <img class="photo" src="images/IMG_5501.JPG"
+       style="object-position:50% 12%"
+       alt="Wilder in Emeralds jersey" />
+  <img class="photo" src="images/The Emeralds-0199.JPEG"
+       style="object-position:50% 8%"
+       alt="Wilder at bat" />
+  <img class="photo" src="images/IMG_7847.jpeg"
+       style="object-position:50% 18%"
+       alt="Wilder throwing at practice" />
+  <img class="photo" src="images/catcher1.jpg"
+       style="object-position:50% 12%"
+       alt="Catching" />
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- Next Game Card -->
+  <div class="next-game-card" id="next-game-card">
+    <div>
+      <div class="label">⚾ Next Game</div>
+      <div class="game-date" id="ng-date">—</div>
+      <div class="game-info" id="ng-info">—</div>
+      <div class="game-time" id="ng-time">—</div>
+    </div>
+    <div class="baseball">⚾</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stat-card"><div class="num" id="stat-total">0</div><div class="lbl">Total Games</div></div>
+    <div class="stat-card"><div class="num" id="stat-remaining">0</div><div class="lbl">Games Left</div></div>
+    <div class="stat-card"><div class="num" id="stat-practices">0</div><div class="lbl">Practices Left</div></div>
+    <div class="stat-card"><div class="num" id="stat-weeks">0</div><div class="lbl">Weeks of Season</div></div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <section id="schedule">
+    <h2 class="section-title">🗓 Schedule</h2>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Game">Games Only</button>
+      <button class="filter-btn" data-filter="Practice">Practices Only</button>
+      <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+    </div>
+
+    <div class="schedule-wrap">
+      <table id="schedule-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Type</th>
+            <th>Details</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section id="photos" style="margin-top:3rem;">
+    <h2 class="section-title">📸 Photos</h2>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <span id="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Wilder's Emeralds</strong> &nbsp;·&nbsp; SLV Little League AAA &nbsp;·&nbsp; 2026 &nbsp;·&nbsp;
+  <strong>Go Emeralds!</strong> ⚾
+</footer>
+
+<script>
+  /* ── Schedule data ── */
+  const schedule = [
+    { date:"2026-03-14", day:"Sat", type:"Game",     details:"vs Hooks",       time:"4:00 PM", home:true  },
+    { date:"2026-03-16", day:"Mon", type:"Game",     details:"@ Goats",        time:"5:30 PM", home:false },
+    { date:"2026-03-17", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-03-19", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-03-20", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-03-21", day:"Sat", type:"Game",     details:"@ TBD",          time:"4:00 PM", home:false },
+    { date:"2026-03-23", day:"Mon", type:"Game",     details:"vs Rivercats",   time:"5:30 PM", home:true  },
+    { date:"2026-03-24", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-03-28", day:"Sat", type:"Game",     details:"vs TBD",         time:"1:00 PM", home:true  },
+    { date:"2026-03-30", day:"Mon", type:"Game",     details:"@ Hooks",        time:"5:30 PM", home:false },
+    { date:"2026-03-31", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-02", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-03", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-04-04", day:"Sat", type:"Game",     details:"@ SCLL Giants",  time:"2:00 PM", home:false },
+    { date:"2026-04-07", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-09", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-10", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-04-14", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-15", day:"Wed", type:"Game",     details:"@ Rivercats",    time:"5:30 PM", home:false },
+    { date:"2026-04-16", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-17", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-04-18", day:"Sat", type:"Game",     details:"vs TBD",         time:"4:00 PM", home:true  },
+    { date:"2026-04-21", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-22", day:"Wed", type:"Game",     details:"vs Goats",       time:"5:30 PM", home:true  },
+    { date:"2026-04-23", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-24", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-04-25", day:"Sat", type:"Game",     details:"@ SCLL A's",     time:"2:00 PM", home:false },
+    { date:"2026-04-28", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-04-29", day:"Wed", type:"Game",     details:"vs Hooks",       time:"5:30 PM", home:true  },
+    { date:"2026-04-30", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-01", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-05-02", day:"Sat", type:"Game",     details:"vs TBD",         time:"4:00 PM", home:true  },
+    { date:"2026-05-04", day:"Mon", type:"Game",     details:"@ Goats",        time:"5:30 PM", home:false },
+    { date:"2026-05-05", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-07", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-08", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-05-09", day:"Sat", type:"Game",     details:"vs Rivercats",   time:"4:00 PM", home:true  },
+    { date:"2026-05-12", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-14", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-15", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-05-16", day:"Sat", type:"Game",     details:"vs TBD",         time:"1:00 PM", home:true  },
+    { date:"2026-05-19", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-19", day:"Tue", type:"Game",     details:"vs TBD",         time:"5:00 PM", home:true  },
+    { date:"2026-05-21", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-21", day:"Thu", type:"Game",     details:"vs TBD",         time:"5:00 PM", home:true  },
+    { date:"2026-05-22", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-05-26", day:"Tue", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-28", day:"Thu", type:"Practice", details:"",               time:"3:30 PM", home:null  },
+    { date:"2026-05-28", day:"Thu", type:"Game",     details:"vs TBD",         time:"5:00 PM", home:true  },
+    { date:"2026-05-29", day:"Fri", type:"Practice", details:"",               time:"5:00 PM", home:null  },
+    { date:"2026-05-30", day:"Sat", type:"Game",     details:"vs TBD",         time:"5:00 PM", home:true  },
+    { date:"2026-06-02", day:"Tue", type:"Game",     details:"vs TBD",         time:"5:00 PM", home:true  },
+  ];
+
+  /* ── Photos
+     object-position keeps face visible when cropped to 4:3 landscape.
+     Portrait shots: push position toward top.
+     Landscape shots: center is fine.                                    ── */
+  const photos = [
+    { src:"images/IMG_5501.JPG",       pos:"50% 10%",  caption:"Wilder — Go Emeralds!" },
+    { src:"images/The Emeralds-0199.JPEG", pos:"50% 8%", caption:"Wilder at the plate" },
+    { src:"images/IMG_7847.jpeg",      pos:"50% 15%",  caption:"Practice — firing it in" },
+    { src:"images/IMG_5551.JPG",       pos:"50% 20%",  caption:"Fielding through the fence" },
+    { src:"images/IMG_5552.JPG",       pos:"50% 20%",  caption:"On the diamond" },
+    { src:"images/catcher1.jpg",       pos:"50% 12%",  caption:"Behind the plate" },
+    { src:"images/catcher2.jpg",       pos:"50% 20%",  caption:"Blocking at dusk" },
+    { src:"images/kid-bat1.jpg",       pos:"50% 10%",  caption:"Game day" },
+    { src:"images/kid-bat2.jpg",       pos:"50% 8%",   caption:"Easton speed" },
+    { src:"images/fields-closed.jpg",     pos:"center",   caption:"Rain delay blues ☔" },
+  ];
+
+  /* ── Helpers ── */
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  function parseDate(s) {
+    const [y,m,d] = s.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
+  function fmtDate(s) {
+    return parseDate(s).toLocaleDateString('en-US',
+      { month:'short', day:'numeric', weekday:'short' });
+  }
+  const isPast  = s => parseDate(s) < today;
+  const isToday = s => parseDate(s).getTime() === today.getTime();
+
+  /* ── Build schedule ── */
+  function buildTable() {
+    const tbody = document.getElementById('schedule-body');
+    schedule.forEach(ev => {
+      const past = isPast(ev.date);
+      const tod  = isToday(ev.date);
+      const tr   = document.createElement('tr');
+      tr.dataset.type = ev.type;
+      tr.dataset.past = past ? '1' : '0';
+      if (past) tr.classList.add('past');
+      if (tod)  tr.classList.add('today');
+
+      let badge = `<span class="badge badge-${ev.type.toLowerCase()}">${ev.type}</span>`;
+      if (tod)  badge += ' <span class="badge badge-today">TODAY</span>';
+
+      let det = ev.details || '<em style="color:#888">Team Practice</em>';
+      if (ev.type === 'Game' && ev.details) {
+        const ha = ev.home === true
+          ? '<span class="ha home-tag">HOME</span>'
+          : ev.home === false
+            ? '<span class="ha away-tag">AWAY</span>'
+            : '';
+        det = ev.details + ha;
+      }
+
+      tr.innerHTML = `
+        <td>${fmtDate(ev.date)}</td>
+        <td>${ev.day}</td>
+        <td>${badge}</td>
+        <td>${det}</td>
+        <td>${ev.time}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  /* ── Filters ── */
+  document.querySelectorAll('.filter-btn').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      document.querySelectorAll('#schedule-body tr').forEach(tr => {
+        let show = true;
+        if (f === 'Game')     show = tr.dataset.type === 'Game';
+        if (f === 'Practice') show = tr.dataset.type === 'Practice';
+        if (f === 'upcoming') show = tr.dataset.past === '0';
+        tr.classList.toggle('hidden', !show);
+      });
+      document.querySelectorAll('.filter-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.filter === f));
+    })
+  );
+
+  /* ── Next game card ── */
+  function buildNextGame() {
+    const next = schedule.find(e => e.type === 'Game' && !isPast(e.date));
+    if (!next) { document.getElementById('next-game-card').style.display='none'; return; }
+    document.getElementById('ng-date').textContent = fmtDate(next.date);
+    const ha = next.home === true ? '(Home)' : next.home === false ? '(Away)' : '';
+    document.getElementById('ng-info').textContent = `${next.details || 'Opponent TBD'} ${ha}`;
+    document.getElementById('ng-time').textContent = `⏰ ${next.time}`;
+  }
+
+  /* ── Stats ── */
+  function buildStats() {
+    const games     = schedule.filter(e => e.type === 'Game');
+    const remaining = games.filter(e => !isPast(e.date));
+    const practices = schedule.filter(e => e.type === 'Practice' && !isPast(e.date));
+    const first = parseDate(schedule[0].date);
+    const last  = parseDate(schedule[schedule.length-1].date);
+    const weeks = Math.ceil((last - first) / (7 * 86400000));
+    document.getElementById('stat-total').textContent     = games.length;
+    document.getElementById('stat-remaining').textContent = remaining.length;
+    document.getElementById('stat-practices').textContent = practices.length;
+    document.getElementById('stat-weeks').textContent     = weeks;
+  }
+
+  /* ── Gallery ── */
+  function buildGallery() {
+    const grid = document.getElementById('gallery');
+    photos.forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.innerHTML = `
+        <img src="${p.src}"
+             alt="${p.caption}"
+             loading="lazy"
+             style="object-position:${p.pos}"
+             onerror="this.closest('.gallery-item').style.display='none'" />
+        <div class="caption">${p.caption}</div>
+      `;
+      item.querySelector('img').addEventListener('click', () => {
+        document.getElementById('lightbox-img').src = p.src;
+        document.getElementById('lightbox-img').alt = p.caption;
+        document.getElementById('lightbox-img').style.objectPosition = 'center';
+        document.getElementById('lightbox').classList.add('open');
+      });
+      grid.appendChild(item);
+    });
+  }
+
+  /* ── Lightbox ── */
+  document.getElementById('lightbox-close').addEventListener('click',
+    () => document.getElementById('lightbox').classList.remove('open'));
+  document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target === document.getElementById('lightbox'))
+      document.getElementById('lightbox').classList.remove('open');
+  });
+
+  /* ── Nav scroll ── */
+  document.querySelectorAll('nav a').forEach(a =>
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelector(a.getAttribute('href'))
+        ?.scrollIntoView({ behavior:'smooth', block:'start' });
+    })
+  );
+
+  /* ── Init ── */
+  buildTable();
+  buildNextGame();
+  buildStats();
+  buildGallery();
+</script>
+</body>
+</html>
