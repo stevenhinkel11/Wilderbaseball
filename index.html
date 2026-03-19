@@ -56,9 +56,10 @@
       background: #000;
     }
     .mascot-wrap img {
-      width: 100%; height: 100%;
-      object-fit: contain;
-      object-position: center;
+      width: 115%; height: 115%;
+      margin: -7.5%;
+      object-fit: cover;
+      object-position: center 20%;
     }
     header h1 {
       font-size: clamp(1.6rem, 5vw, 2.8rem);
@@ -258,6 +259,126 @@
     .away-tag { color: #b55; font-weight: bold; }
     .ha       { font-size: .74rem; margin-left: .3rem; }
 
+    /* ── VIEW TOGGLE + ICS ── */
+    .view-bar {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .view-btn {
+      background: #fff;
+      border: 2px solid var(--green);
+      color: var(--green);
+      padding: .35rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: .85rem;
+      font-family: Georgia, serif;
+      transition: all .2s;
+    }
+    .view-btn:hover, .view-btn.active {
+      background: var(--green);
+      color: #fff;
+    }
+    .ics-btn {
+      margin-left: auto;
+      background: var(--dk);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      padding: .35rem 1.1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: .85rem;
+      font-family: Georgia, serif;
+      font-weight: bold;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .ics-btn:hover { background: var(--gold); color: var(--dk); }
+
+    /* ── CALENDAR GRID ── */
+    #calendar-view { display: none; }
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .cal-nav-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .35rem .9rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      transition: background .2s;
+    }
+    .cal-nav-btn:hover { background: var(--dk); }
+    .cal-month-label {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--dk);
+      min-width: 170px;
+      text-align: center;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-dh {
+      text-align: center;
+      font-size: .68rem;
+      font-weight: bold;
+      color: #777;
+      padding: .25rem 0;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .cal-cell {
+      min-height: 74px;
+      background: #fff;
+      border-radius: 7px;
+      border: 1px solid var(--tan);
+      padding: .3rem .35rem;
+      transition: border-color .15s;
+    }
+    .cal-cell:hover { border-color: var(--lime); }
+    .cal-cell.empty { background: transparent; border-color: transparent; pointer-events: none; }
+    .cal-cell.cal-today { border: 2px solid var(--gold); background: #fffbdd; }
+    .cal-cell.cal-past  { opacity: .5; }
+    .cal-num {
+      font-size: .78rem;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: .18rem;
+    }
+    .cal-today .cal-num { color: var(--green); }
+    .cal-ev {
+      font-size: .62rem;
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: bold;
+      line-height: 1.5;
+    }
+    .cal-ev.game     { background: var(--gold); color: var(--dk); }
+    .cal-ev.practice { background: #2e7d6e; color: #fff; }
+    @media (max-width: 600px) {
+      .cal-cell { min-height: 54px; }
+      .cal-ev   { display: none; }
+      .cal-num  { font-size: .7rem; }
+    }
+
     /* ── GALLERY ── */
     .gallery {
       display: grid;
@@ -351,6 +472,7 @@
 <!-- NAV -->
 <nav>
   <a href="#schedule" class="active">Schedule</a>
+  <a href="#calendar-view" id="nav-cal">Calendar</a>
   <a href="#photos">Photos</a>
 </nav>
 
@@ -396,26 +518,45 @@
   <section id="schedule">
     <h2 class="section-title">🗓 Schedule</h2>
 
-    <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="Game">Games Only</button>
-      <button class="filter-btn" data-filter="Practice">Practices Only</button>
-      <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+    <!-- View toggle + ICS download -->
+    <div class="view-bar">
+      <button class="view-btn active" id="view-list-btn">📋 List</button>
+      <button class="view-btn"        id="view-cal-btn">📅 Calendar</button>
+      <button class="ics-btn" id="ics-btn">⬇ Download .ics</button>
     </div>
 
-    <div class="schedule-wrap">
-      <table id="schedule-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Day</th>
-            <th>Type</th>
-            <th>Details</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody id="schedule-body"></tbody>
-      </table>
+    <!-- LIST VIEW -->
+    <div id="list-view">
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Game">Games Only</button>
+        <button class="filter-btn" data-filter="Practice">Practices Only</button>
+        <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+      </div>
+      <div class="schedule-wrap">
+        <table id="schedule-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Day</th>
+              <th>Type</th>
+              <th>Details</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CALENDAR VIEW -->
+    <div id="calendar-view">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" id="cal-prev">&#8249;</button>
+        <div class="cal-month-label" id="cal-label"></div>
+        <button class="cal-nav-btn" id="cal-next">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
     </div>
   </section>
 
@@ -645,6 +786,174 @@
         ?.scrollIntoView({ behavior:'smooth', block:'start' });
     })
   );
+
+  /* ── View toggle (List / Calendar) ── */
+  const listView   = document.getElementById('list-view');
+  const calView    = document.getElementById('calendar-view');
+  const viewListBtn = document.getElementById('view-list-btn');
+  const viewCalBtn  = document.getElementById('view-cal-btn');
+
+  viewListBtn.addEventListener('click', () => {
+    listView.style.display = '';
+    calView.style.display  = 'none';
+    viewListBtn.classList.add('active');
+    viewCalBtn.classList.remove('active');
+  });
+  viewCalBtn.addEventListener('click', () => {
+    listView.style.display = 'none';
+    calView.style.display  = '';
+    viewListBtn.classList.remove('active');
+    viewCalBtn.classList.add('active');
+    renderCalendar();
+  });
+
+  /* ── Calendar ── */
+  let calYear  = today.getFullYear();
+  let calMonth = today.getMonth();
+
+  // Jump to first month that has events
+  const firstEvDate = parseDate(schedule[0].date);
+  if (today < firstEvDate) { calYear = firstEvDate.getFullYear(); calMonth = firstEvDate.getMonth(); }
+
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  function renderCalendar() {
+    document.getElementById('cal-label').textContent = `${MONTHS[calMonth]} ${calYear}`;
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+
+    // Day headers
+    DAYS.forEach(d => {
+      const h = document.createElement('div');
+      h.className = 'cal-dh'; h.textContent = d;
+      grid.appendChild(h);
+    });
+
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+    // Blanks
+    for (let i = 0; i < firstDay; i++) {
+      const b = document.createElement('div');
+      b.className = 'cal-cell empty';
+      grid.appendChild(b);
+    }
+
+    // Build event map for fast lookup
+    const evMap = {};
+    schedule.forEach(ev => {
+      if (!evMap[ev.date]) evMap[ev.date] = [];
+      evMap[ev.date].push(ev);
+    });
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell  = document.createElement('div');
+      const dateKey = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const cellDate = parseDate(dateKey);
+      cell.className = 'cal-cell';
+      if (cellDate < today)  cell.classList.add('cal-past');
+      if (cellDate.getTime() === today.getTime()) cell.classList.add('cal-today');
+
+      const num = document.createElement('div');
+      num.className = 'cal-num'; num.textContent = d;
+      cell.appendChild(num);
+
+      (evMap[dateKey] || []).forEach(ev => {
+        const ev_el = document.createElement('div');
+        ev_el.className = `cal-ev ${ev.type.toLowerCase()}`;
+        ev_el.title = `${ev.type}: ${ev.details || 'Practice'} @ ${ev.time}`;
+        ev_el.textContent = ev.type === 'Game'
+          ? `⚾ ${ev.details || 'Game'}`
+          : `🏟 Practice`;
+        cell.appendChild(ev_el);
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
+    renderCalendar();
+  });
+  document.getElementById('cal-next').addEventListener('click', () => {
+    calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
+    renderCalendar();
+  });
+
+  /* ── ICS download ── */
+  function pad2(n) { return String(n).padStart(2,'0'); }
+
+  function timeToLocal(dateStr, timeStr) {
+    // "2026-03-14", "4:00 PM" → "20260314T160000"
+    const [y,m,d] = dateStr.split('-');
+    const [clock, ampm] = timeStr.split(' ');
+    let [h, min] = clock.split(':').map(Number);
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    return `${y}${m}${d}T${pad2(h)}${pad2(min)}00`;
+  }
+
+  function addMinutes(dtLocal, mins) {
+    // dtLocal: "20260314T160000"
+    const y = +dtLocal.slice(0,4), mo = +dtLocal.slice(4,6)-1,
+          d = +dtLocal.slice(6,8),  h = +dtLocal.slice(9,11),
+          mi= +dtLocal.slice(11,13);
+    const dt = new Date(y, mo, d, h, mi + mins);
+    return `${dt.getFullYear()}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}T${pad2(dt.getHours())}${pad2(dt.getMinutes())}00`;
+  }
+
+  function buildICS() {
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Wilder Baseball 2026//SLV Little League//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'X-WR-CALNAME:Wilder Baseball 2026 – Go Emeralds!',
+      'X-WR-TIMEZONE:America/Los_Angeles',
+    ];
+
+    schedule.forEach((ev, i) => {
+      const dtStart = timeToLocal(ev.date, ev.time);
+      const durMins = 120;
+      const dtEnd   = addMinutes(dtStart, durMins);
+      const ha = ev.home === true ? ' (Home)' : ev.home === false ? ' (Away)' : '';
+      const summary = ev.type === 'Game'
+        ? `Game: ${ev.details || 'TBD'}${ha}`
+        : 'Emeralds Practice';
+
+      lines.push('BEGIN:VEVENT');
+      lines.push(`UID:wilder-baseball-2026-ev${i}@slv-emeralds`);
+      lines.push(`DTSTART;TZID=America/Los_Angeles:${dtStart}`);
+      lines.push(`DTEND;TZID=America/Los_Angeles:${dtEnd}`);
+      lines.push(`SUMMARY:⚾ ${summary}`);
+      lines.push(`CATEGORIES:${ev.type.toUpperCase()}`);
+      lines.push(`DESCRIPTION:Wilder's Emeralds – SLV Little League AAA 2026`);
+      lines.push('END:VEVENT');
+    });
+
+    lines.push('END:VCALENDAR');
+    return lines.join('\r\n');
+  }
+
+  document.getElementById('ics-btn').addEventListener('click', () => {
+    const blob = new Blob([buildICS()], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'wilder-baseball-2026.ics';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  });
+
+  /* ── Nav: Calendar link ── */
+  document.getElementById('nav-cal').addEventListener('click', e => {
+    e.preventDefault();
+    viewCalBtn.click();
+    document.getElementById('schedule').scrollIntoView({ behavior:'smooth', block:'start' });
+  });
 
   /* ── Init ── */
   buildTable();
