@@ -373,11 +373,11 @@
     }
     .cal-ev.game     { background: var(--gold); color: var(--dk); }
     .cal-ev.practice { background: #2e7d6e; color: #fff; }
-    @media (max-width: 600px) {
-      .cal-cell { min-height: 54px; }
-      .cal-ev   { display: none; }
-      .cal-num  { font-size: .7rem; }
-    }
+    /* dot indicators for mobile calendar */
+    .cal-dots { display: none; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
+    .cal-dot  { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .cal-dot.game     { background: var(--gold); }
+    .cal-dot.practice { background: #2e7d6e; }
 
     /* ── GALLERY ── */
     .gallery {
@@ -449,11 +449,105 @@
     }
     footer strong { color: var(--gold); }
 
-    /* ── RESPONSIVE ── */
+    /* ── TOUCH BASE ── */
+    button, .filter-btn, .view-btn, .ics-btn, .cal-nav-btn {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── RESPONSIVE / MOBILE ── */
     @media (max-width: 600px) {
-      .hero-strip { height: 180px; }
+      /* Sticky nav so it's always reachable while scrolling */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        padding: .5rem .75rem;
+      }
+      nav a {
+        padding: .5rem 1rem;
+        font-size: .85rem;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      /* Header tighter */
+      header { padding: 1.4rem .75rem 1.2rem; }
+      .mascot-wrap { width: 100px; height: 100px; }
+
+      /* Hero strip */
+      .hero-strip { height: 170px; }
+
+      /* Next game card */
+      .next-game-card { padding: 1rem; gap: .8rem; }
       .next-game-card .baseball { display: none; }
-      thead th:nth-child(5), tbody td:nth-child(5) { display: none; }
+      .next-game-card .game-date { font-size: 1.5rem; }
+
+      /* Stats 2×2 grid */
+      .stats-strip { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+      /* View bar: List+Calendar on row 1, ICS full-width on row 2 */
+      .view-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: .5rem;
+      }
+      .ics-btn {
+        grid-column: 1 / -1;
+        margin-left: 0;
+        text-align: center;
+        padding: .55rem 1rem;
+      }
+      .view-btn, .filter-btn {
+        min-height: 40px;
+        text-align: center;
+      }
+
+      /* Filter bar full-width pills */
+      .filter-bar { gap: .4rem; }
+      .filter-btn { flex: 1 1 auto; text-align: center; }
+
+      /* Table: hide Day column (redundant w/ date) */
+      thead th:nth-child(2), tbody td:nth-child(2) { display: none; }
+      table { font-size: .88rem; }
+      tbody td { padding: .5rem .6rem; }
+
+      /* Calendar */
+      .cal-cell { min-height: 52px; padding: .25rem .2rem; }
+      .cal-ev   { display: none; }
+      .cal-dots { display: flex; }
+      .cal-num  { font-size: .72rem; text-align: center; }
+      .cal-dh   { font-size: .58rem; letter-spacing: 0; }
+      .cal-nav-btn { min-height: 40px; min-width: 40px; }
+      .cal-month-label { font-size: 1rem; }
+      .cal-grid { gap: 3px; }
+
+      /* Gallery 2-col, captions always visible on touch */
+      .gallery { grid-template-columns: 1fr 1fr; gap: .6rem; }
+      .gallery-item .caption {
+        transform: translateY(0);
+        font-size: .7rem;
+        padding: .4rem .5rem .3rem;
+      }
+      .gallery-item:hover img { transform: none; }
+
+      /* Lightbox close bigger tap target */
+      #lightbox-close { font-size: 3rem; top: .8rem; right: 1rem; }
+
+      /* Section title smaller */
+      .section-title { font-size: 1.2rem; }
+
+      /* Main padding */
+      main { padding: 1.25rem .75rem; }
+    }
+
+    /* Safe area insets for iPhone notch/home bar */
+    @supports (padding: env(safe-area-inset-bottom)) {
+      footer { padding-bottom: calc(1.3rem + env(safe-area-inset-bottom)); }
+      nav    { padding-left:  max(.75rem, env(safe-area-inset-left));
+               padding-right: max(.75rem, env(safe-area-inset-right)); }
     }
   </style>
 </head>
@@ -801,7 +895,7 @@
   });
   viewCalBtn.addEventListener('click', () => {
     listView.style.display = 'none';
-    calView.style.display  = '';
+    calView.style.display  = 'block';
     viewListBtn.classList.remove('active');
     viewCalBtn.classList.add('active');
     renderCalendar();
@@ -860,7 +954,9 @@
       num.className = 'cal-num'; num.textContent = d;
       cell.appendChild(num);
 
-      (evMap[dateKey] || []).forEach(ev => {
+      const events = evMap[dateKey] || [];
+      // Text labels (desktop)
+      events.forEach(ev => {
         const ev_el = document.createElement('div');
         ev_el.className = `cal-ev ${ev.type.toLowerCase()}`;
         ev_el.title = `${ev.type}: ${ev.details || 'Practice'} @ ${ev.time}`;
@@ -869,6 +965,18 @@
           : `🏟 Practice`;
         cell.appendChild(ev_el);
       });
+      // Dot indicators (mobile)
+      if (events.length) {
+        const dots = document.createElement('div');
+        dots.className = 'cal-dots';
+        events.forEach(ev => {
+          const dot = document.createElement('span');
+          dot.className = `cal-dot ${ev.type.toLowerCase()}`;
+          dot.title = `${ev.type} @ ${ev.time}`;
+          dots.appendChild(dot);
+        });
+        cell.appendChild(dots);
+      }
 
       grid.appendChild(cell);
     }
